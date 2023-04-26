@@ -15,9 +15,6 @@ const
     BOLD = "\x1b[1m"
     RESET = "\x1b[0m"
     RED = "\x1b[31m"
-    
-let
-    DATASET_DIR = getAppDir().joinPath("dataset")
 
 type
     PARAMS = ref object of RootObj
@@ -36,7 +33,8 @@ var
     ]
     defaultHeaders = newHttpHeaders(HEADERS)
     TIMEOUT = 2000
-
+let
+    DATASET_DIR = getAppDir().joinPath("dataset")
 
 when isMainModule:
     discard parseInt(TIMEOUT_ENV,TIMEOUT,0)
@@ -59,6 +57,7 @@ when isMainModule:
     Proxy = PROXIFY(use_proxy: if(proxyURL == "" or proxyURL == "nothing"): false else: true, proxy_url:proxyURL)
     
     proc gatherStats(timeoutMS: int = 2000, id: string): Future[void] {.async.} =
+        {.cast(gcsafe).}
         try:
             var client: AsyncHttpClient 
             if(Proxy.useProxy): client = newAsyncHttpClient(proxy=newProxy(Proxy.proxy_url))
@@ -69,7 +68,6 @@ when isMainModule:
 
             var req = await client.getContent(fmt"{API}{PATH}{id}")
 
-            var test= " d"
             var DOM = req.parseHtml()
             var rating = DOM.querySelector("[data-testid='hero-rating-bar__aggregate-rating__score']")
                 .querySelector("[class='sc-bde20123-1 iZlgcd']").innerText()
