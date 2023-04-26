@@ -1,5 +1,5 @@
 # IMDB-bot
-Parallel, efficient and rapid IMDB bot to extract IMDB meta  in JSON format  at once from the series/films list given
+Parallel, efficient and rapid IMDB bot to extract IMDB meta  in JSON format  at once from the series/films list given without requiring an API key
 
 ``list.txt`` should contain the IDs of the film/serie. Each line should represent one ID.
 
