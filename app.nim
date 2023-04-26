@@ -92,7 +92,7 @@ when isMainModule:
 
             echo fmt"Task for {title} completed [{file}]"
         except CatchableError:
-            echo "Something went wrong, possibly a data which from query selections happens do not exist on thi film/serie"
+            echo "Something went wrong"
     var tasks = newSeq[Future[void]]()
     var imdbs = open(getAppDir().joinPath("list.txt"), bufSize=2048)
     
