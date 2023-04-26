@@ -3,7 +3,7 @@ Parallel, efficient and rapid IMDB bot to extract IMDB meta  in JSON format  at 
 
 ``list.txt`` should contain the IDs of the film/serie. Each line should represent one ID.
 
-**The script automatically generates a ``dataset`` directory in which it generates one another recursive folder with the serie/movie title and in that folder the JSON dataset of the IMDB meta.**
+**The script automatically generates a ``dataset`` directory in which it generates one another recursive folder with the serie/movie title as the ``dirname`` and in that folder the JSON dataset of the IMDB meta corresponding that specific film/serie.**
 
 ### Example data save:
 ```js
