@@ -4,7 +4,7 @@
 #                  License: GNU
 # 
 
-import std / [httpclient, os, parseutils, strformat, uri, xmltree, sequtils, json, asyncdispatch]
+import std / [httpclient, os, parseutils, strformat, uri, xmltree, json, asyncdispatch]
 import nimquery
 from std/htmlparser import parseHtml 
 
@@ -77,6 +77,7 @@ when isMainModule:
             var popularity = DOM.querySelector("[class=\"sc-5f7fb5b4-1 bhuIgW\"]").innerText()
             var title = DOM.querySelector("[class=\"sc-afe43def-1 fDTGTb\"]").innerText()
             
+            var file = DATASET_DIR.joinPath(title).joinPath("data.json")
             var dataset = %*{ 
                 "title": title,
                 "description": description,
@@ -85,10 +86,12 @@ when isMainModule:
                 "genres": genres
             }
             createDir(DATASET_DIR.joinPath(title))
-            var f = open(DATASET_DIR.joinPath(title).joinPath("data.json"), fmReadWrite)
+            var f = open(file, fmReadWrite)
             f.write(pretty(dataset,4))
             f.close()
-        except:
+
+            echo fmt"Task for {title} completed [{file}]"
+        except CatchableError:
             echo "Something went wrong, possibly a data which from query selections happens do not exist on thi film/serie"
     var tasks = newSeq[Future[void]]()
     var imdbs = open(getAppDir().joinPath("list.txt"), bufSize=2048)
