@@ -15,6 +15,9 @@ const
     BOLD = "\x1b[1m"
     RESET = "\x1b[0m"
     RED = "\x1b[31m"
+    
+let
+    DATASET_DIR = getAppDir().joinPath("dataset")
 
 type
     PARAMS = ref object of RootObj
@@ -33,8 +36,7 @@ var
     ]
     defaultHeaders = newHttpHeaders(HEADERS)
     TIMEOUT = 2000
-let
-    DATASET_DIR = getAppDir().joinPath("dataset")
+
 
 when isMainModule:
     discard parseInt(TIMEOUT_ENV,TIMEOUT,0)
@@ -67,6 +69,7 @@ when isMainModule:
 
             var req = await client.getContent(fmt"{API}{PATH}{id}")
 
+            var test= " d"
             var DOM = req.parseHtml()
             var rating = DOM.querySelector("[data-testid='hero-rating-bar__aggregate-rating__score']")
                 .querySelector("[class='sc-bde20123-1 iZlgcd']").innerText()
