@@ -24,7 +24,7 @@ Parallel, efficient and rapid IMDB bot to extract IMDB meta in JSON format from 
 - ``ALEXA_PX_TIMEOUT`` -> if set uses this timeout
 
 # Requirements
-``nibme install nimquery``
+``nimble install nimquery``
 
 ### Compile
 ``nim c -d:ssl -d:release app.nim``
