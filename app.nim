@@ -12,6 +12,9 @@ const
     API {.used.} = "https://www.imdb.com/title"
     PATH {.used.} = "/"
     TIMEOUT_ENV = if existsEnv("ALEXA_PX_TIMEOUT"): getEnv("ALEXA_PX_TIMEOUT") else: "2000"
+    BOLD = "\x1b[1m"
+    RESET = "\x1b[0m"
+    RED = "\x1b[31m"
 
 type
     PARAMS = ref object of RootObj
@@ -37,6 +40,7 @@ when isMainModule:
     discard parseInt(TIMEOUT_ENV,TIMEOUT,0)
 
     assert fileExists(getAppDir().joinPath("list.txt"))
+
     try:
         if existsEnv("http_proxy"):
             proxyURL = getEnv("http_proxy","nothing")
@@ -90,9 +94,9 @@ when isMainModule:
             f.write(pretty(dataset,4))
             f.close()
 
-            echo fmt"Task for {title} completed [{file}]"
+            echo fmt"Task for {BOLD}{title}{RESET} completed [{BOLD}{file}{RESET}]"
         except CatchableError:
-            echo "Something went wrong"
+            echo fmt"{BOLD}{RED}Something went wrong{RESET}"
     var tasks = newSeq[Future[void]]()
     var imdbs = open(getAppDir().joinPath("list.txt"), bufSize=2048)
     
@@ -102,4 +106,4 @@ when isMainModule:
         tasks.add(gatherStats(TIMEOUT,line))
     all(tasks).waitFor()
 
-    echo "Tasks completed"
+    echo "\nTasks completed"
