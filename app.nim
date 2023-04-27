@@ -69,8 +69,6 @@ when isMainModule:
             var req = client.getContent(fmt"{API}{PATH}{id}")
             var tmOut = await req.withTimeout(timeoutMS)
 
-            assert not tmOut
-
             var DOM: XmlNode = await(req).parseHtml()
             var rating = DOM.querySelector("[data-testid='hero-rating-bar__aggregate-rating__score']")
                 .querySelector("[class='sc-bde20123-1 iZlgcd']").innerText()
