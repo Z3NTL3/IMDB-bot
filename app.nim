@@ -4,7 +4,7 @@
 #                  License: GNU
 # 
 
-import std / [httpclient, os, parseutils, strformat, uri, xmltree, json, asyncdispatch]
+import std / [httpclient, os, parseutils, strformat, uri, xmltree, json, asyncdispatch, strutils]
 import nimquery
 from std/htmlparser import parseHtml 
 
@@ -15,6 +15,7 @@ const
     BOLD = "\x1b[1m"
     RESET = "\x1b[0m"
     RED = "\x1b[31m"
+    ILLEGAL = ["#","<",">","$","+","%", "!", ":", "`", "&", "{","}", "\"","'", "|"]
 
 type
     PARAMS = ref object of RootObj
@@ -81,6 +82,9 @@ when isMainModule:
             var description = DOM.querySelector("[class=\"sc-5f699a2-0 kcphyk\"]").innerText()
             var popularity = DOM.querySelector("[class=\"sc-5f7fb5b4-1 bhuIgW\"]").innerText()
             var title = DOM.querySelector("[class=\"sc-afe43def-1 fDTGTb\"]").innerText()
+
+            for disallowed in ILLEGAL.items():
+                title = title.replace(disallowed)
             
             var file = DATASET_DIR.joinPath(title).joinPath("data.json")
             var dataset = %*{ 
@@ -90,6 +94,7 @@ when isMainModule:
                 "rating": rating,
                 "genres": genres
             }
+
             createDir(DATASET_DIR.joinPath(title))
             var f = open(file, fmReadWrite)
             f.write(pretty(dataset,4))
@@ -97,7 +102,9 @@ when isMainModule:
 
             echo fmt"Task for {BOLD}{title}{RESET} completed [{BOLD}{file}{RESET}]"
         except CatchableError:
-            echo fmt"{BOLD}{RED}Something went wrong{RESET}"
+            echo fmt"{BOLD}{RED}[ Something went wrong ] {RESET}"
+            var err = getCurrentException()
+            echo err.msg
     var tasks = newSeq[Future[void]]()
     var imdbs = open(getAppDir().joinPath("list.txt"), bufSize=2048)
     
