@@ -60,16 +60,18 @@ when isMainModule:
     proc gatherStats(timeoutMS: int = 2000, id: string): Future[void] {.async.} =
         {.cast(gcsafe).}
         try:
-            var client: AsyncHttpClient 
+            var client: AsyncHttpClient
             if(Proxy.useProxy): client = newAsyncHttpClient(proxy=newProxy(Proxy.proxy_url))
             else: client = newAsyncHttpClient()
 
             client.headers = defaultHeaders
-            client.timeout = timeoutMS
 
-            var req = await client.getContent(fmt"{API}{PATH}{id}")
+            var req = client.getContent(fmt"{API}{PATH}{id}")
+            var tmOut = await req.withTimeout(timeoutMS)
 
-            var DOM = req.parseHtml()
+            assert not tmOut
+
+            var DOM: XmlNode = await(req).parseHtml()
             var rating = DOM.querySelector("[data-testid='hero-rating-bar__aggregate-rating__score']")
                 .querySelector("[class='sc-bde20123-1 iZlgcd']").innerText()
         
@@ -99,6 +101,8 @@ when isMainModule:
             var f = open(file, fmReadWrite)
             f.write(pretty(dataset,4))
             f.close()
+
+            client.close()
 
             echo fmt"Task for {BOLD}{title}{RESET} completed [{BOLD}{file}{RESET}]"
         except CatchableError:
