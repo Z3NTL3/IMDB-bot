@@ -33,7 +33,7 @@ var
         ("cache-control", "must-revalidate")
     ]
     defaultHeaders = newHttpHeaders(HEADERS)
-    TIMEOUT = 2000
+    TIMEOUT = 5000
 let
     DATASET_DIR = getAppDir().joinPath("dataset")
 
@@ -69,6 +69,8 @@ when isMainModule:
             var req = client.getContent(fmt"{API}{PATH}{id}")
             var tmOut = await req.withTimeout(timeoutMS)
 
+            assert tmOut == false
+
             var DOM: XmlNode = await(req).parseHtml()
             var rating = DOM.querySelector("[data-testid='hero-rating-bar__aggregate-rating__score']")
                 .querySelector("[class='sc-bde20123-1 iZlgcd']").innerText()
@@ -103,7 +105,7 @@ when isMainModule:
             client.close()
 
             echo fmt"Task for {BOLD}{title}{RESET} completed [{BOLD}{file}{RESET}]"
-        except CatchableError:
+        except Exception as error:
             echo fmt"{BOLD}{RED}[ Something went wrong ] {RESET}"
             var err = getCurrentException()
             echo err.msg
