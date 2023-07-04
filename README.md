@@ -1,9 +1,9 @@
 # IMDB-bot
-Parallel, efficient and rapid IMDB bot to extract IMDB meta  in JSON format  at once from the series/films list given without requiring an API key
+Parallel, efficient and rapid IMDB bot to extract IMDB meta  in JSON. This all obtained without requiring an API key and proxy tunneling is supported under the hood!
 
 ``list.txt`` should contain the IDs of the film/serie. Each line should represent one ID.
 
-**The script automatically generates a ``dataset`` directory in which it generates one another recursive folder with the serie/movie title as the ``dirname`` and in that folder the JSON dataset of the IMDB meta corresponding that specific film/serie.**
+**The script automatically generates a ``dataset`` directory in which it generates one another recursive folder with the serie/movie title as the ``dirname`` and in that folder the JSON dataset of the IMDB meta corresponding to that specific film/serie.**
 
 ### Example data save:
 ```js
